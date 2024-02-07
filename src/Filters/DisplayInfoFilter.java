@@ -15,19 +15,14 @@ public class DisplayInfoFilter implements PixelFilter {
         short[][] grid = img.getBWPixelGrid();
 
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
+        img.setPixels(grid);
 
-        int blackCount = 0;
-        int whiteCount = 0;
-        for (int r = 0; r < grid.length; r++) {
-            for (int c = 0; c < grid[0].length; c++) {
-                if (grid[r][c] < 10) blackCount++;
-                if (grid[r][c] > 240) whiteCount++;
-            }
+        int bubbleSize = (221-102)/5;
+        int r = 109;
+        for (int c = 102; c < 221; c+=bubbleSize) {
+            //displayBubbleBorder(grid, r, c, bubbleSize);
+            int percent = getPercentageFilled(grid,r,c,bubbleSize);
         }
-
-        System.out.println(blackCount + " nearly black pixels and " + whiteCount + " nearly white pixels");
-        System.out.println("----------------------------------------");
-        System.out.println("If you want, you could output information to a file instead of printing it.");
 
         return img;
     }

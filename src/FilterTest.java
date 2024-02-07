@@ -9,14 +9,14 @@ public class FilterTest {
     public static String currentFolder = System.getProperty("user.dir") + "/";
 
     public static void main(String[] args) {
-        // SaveAndDisplayExample();
+       SaveAndDisplayExample();
 
-        RunTheFilter();
+       RunTheFilter();
     }
 
     private static void RunTheFilter() {
         System.out.println("Loading pdf....");
-        PImage in = PDFHelper.getPageImage("assets/omrtest.pdf",1);
+        PImage in = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",1);
         DImage img = new DImage(in);       // you can make a DImage from a PImage
 
         System.out.println("Running filter on page 1....");
@@ -27,9 +27,9 @@ public class FilterTest {
     }
 
     private static void SaveAndDisplayExample() {
-        PImage img = PDFHelper.getPageImage("assets/omrtest.pdf",1);
-        img.save(currentFolder + "assets/page1.png");
+        PImage img = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",1);
+        img.save(currentFolder + "assets/OfficialOMRSampleDoc.png");
 
-        DisplayWindow.showFor("assets/page1.png");
+        DisplayWindow.showFor("assets/OfficialOMRSampleDoc.png");
     }
 }
