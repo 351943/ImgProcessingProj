@@ -14,6 +14,8 @@ public class DisplayInfoFilter implements PixelFilter {
     public DImage processImage(DImage img) {
         short[][] grid = img.getBWPixelGrid();
 
+        grid = crop(grid, 0, 0, 500, 500);
+
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
         img.setPixels(grid);
 
@@ -25,6 +27,41 @@ public class DisplayInfoFilter implements PixelFilter {
         }
 
         return img;
+    }
+
+    private void displayBubbleBorder(short[][] grid, int r, int c, int bubbleSize) {
+        for (int i = r; i < r+bubbleSize; i++) {
+            for (int j = c; j < c+bubbleSize; j++) {
+                if(i==r||j==c||i==r+bubbleSize-1||j==c+bubbleSize-1){
+                    grid[i][j]=0;
+                }
+            }
+        }
+    }
+
+    private int getPercentageFilled(short[][] grid, int row, int col, int bubbleSize) {
+        int blackCount = 0;
+        int pixelNum=0;
+        for (int r = row; r < r+bubbleSize; r++) {
+            for (int c = col; c < c+bubbleSize; c++) {
+                if (grid[r][c] < 10) {
+                    blackCount++;
+                }
+                pixelNum++;
+            }
+        }
+        int percent = (blackCount/pixelNum)*100;
+        return percent;
+    }
+
+    private short[][] crop(short[][] grid, int startR, int startC, int endR, int endC) {
+        short[][] newGrid = new short[endC-startC][endR-startR];
+        for (int r = startR; r < endR; r++) {
+            for (int c = startC; c < endC; c++) {
+                newGrid[r][c] = grid[r][c];
+            }
+        }
+        return newGrid;
     }
 }
 
