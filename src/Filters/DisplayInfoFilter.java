@@ -19,13 +19,18 @@ public class DisplayInfoFilter implements PixelFilter {
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
         img.setPixels(grid);
 
-        int bubbleSize = (221-102)/5;
-        int r = 109;
-        for (int c = 102; c < 221; c+=bubbleSize) {
-            //displayBubbleBorder(grid, r, c, bubbleSize);
-            int percent = getPercentageFilled(grid,r,c,bubbleSize);
+        int bubbleSize = (224-104)/5;
+        for (int r = 106; r < 106+bubbleSize*2*12; r+=bubbleSize*2) {
+            percentList=new ArrayList<>();
+            for (int c = 104; c < 104+bubbleSize*5; c+=bubbleSize) {
+                percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
+                displayBubbleBorder(grid, r, c, bubbleSize);
+            }
+            System.out.println(questionNum+": "+findMostFilled(percentList));
+            questionNum++;
         }
 
+        img.setPixels(grid);
         return img;
     }
 
@@ -42,9 +47,9 @@ public class DisplayInfoFilter implements PixelFilter {
     private int getPercentageFilled(short[][] grid, int row, int col, int bubbleSize) {
         int blackCount = 0;
         int pixelNum=0;
-        for (int r = row; r < r+bubbleSize; r++) {
-            for (int c = col; c < c+bubbleSize; c++) {
-                if (grid[r][c] < 10) {
+        for (int r = row; r < row+bubbleSize; r++) {
+            for (int c = col; c < col+bubbleSize; c++) {
+                if (grid[r][c] < 220) {
                     blackCount++;
                 }
                 pixelNum++;

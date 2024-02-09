@@ -9,9 +9,15 @@ public class FilterTest {
     public static String currentFolder = System.getProperty("user.dir") + "/";
 
     public static void main(String[] args) {
-       SaveAndDisplayExample();
+        // ----------------------------------------------------------------
+        // >>> Run this to save a pdf page and run filters on the image <<<
+        // ----------------------------------------------------------------
+        SaveAndDisplayExample(1);
 
-       RunTheFilter();
+        // -------------------------------------------------------------------------------
+        // >>> Run this to run your filter on a page /without/ displaying anything <<<
+        // -------------------------------------------------------------------------------
+        // RunTheFilter();
     }
 
     private static void RunTheFilter() {
@@ -24,12 +30,13 @@ public class FilterTest {
         filter.processImage(img);  // if you want, you can make a different method
                                    // that does the image processing an returns a DTO with
                                    // the information you want
+
     }
 
-    private static void SaveAndDisplayExample() {
-        PImage img = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",1);
-        img.save(currentFolder + "assets/OfficialOMRSampleDoc.png");
+    private static void SaveAndDisplayExample(int page) {
+        PImage img = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",page);
+        img.save(currentFolder + "assets/page" + page + ".png");
 
-        DisplayWindow.showFor("assets/OfficialOMRSampleDoc.png");
+        DisplayWindow.showFor("assets/page1.png");
     }
 }
