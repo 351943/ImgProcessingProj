@@ -1,8 +1,8 @@
+import Filters.DisplayInfoFilter;
+
 import javax.swing.*;
 import java.io.File;
 
-// Author: David Dobervich (this is my edit)
-// ANOTHER EDIT.
 public class OpticalMarkReaderMain {
     public static void main(String[] args) {
         String pathToPdf = fileChooser();
