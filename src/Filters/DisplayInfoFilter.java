@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class DisplayInfoFilter implements PixelFilter {
     public DisplayInfoFilter() {
         System.out.println("Filter running...");
-        //
+
     }
 
 
