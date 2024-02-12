@@ -1,7 +1,8 @@
 import Filters.DisplayInfoFilter;
 
 import javax.swing.*;
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
 
 public class OpticalMarkReaderMain {
     public static void main(String[] args) {
@@ -17,6 +18,9 @@ public class OpticalMarkReaderMain {
         (4).  Output 2 csv files
          */
 
+        
+        inputAnswerFile(fileContent,questionNum,findMostFilled(percentList));
+        
     }
     private void inputAnswerFile(String fileContent, int questionNum, String mostFilled) throws IOException {
         fileContent+=questionNum+": "+mostFilled;
