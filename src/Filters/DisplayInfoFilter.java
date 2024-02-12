@@ -22,10 +22,10 @@ public class DisplayInfoFilter implements PixelFilter {
 
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
 
-        int bubbleSize = (224-104)/5;
-        for (int r = 106; r < 106+bubbleSize*2*12; r+=bubbleSize*2) {
+        int bubbleSize = (111-51)/5;
+        for (int r = 54; r < 54+bubbleSize*2*18; r+=bubbleSize*2) {
             percentList=new ArrayList<>();
-            for (int c = 104; c < 104+bubbleSize*5; c+=bubbleSize) {
+            for (int c = 51; c < 51+bubbleSize*5; c+=bubbleSize) {
                 percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
                 displayBubbleBorder(grid, r, c, bubbleSize);
             }
