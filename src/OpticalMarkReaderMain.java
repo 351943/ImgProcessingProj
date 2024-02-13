@@ -10,6 +10,7 @@ public class OpticalMarkReaderMain {
         String fileContent = "";
         System.out.println("Loading pdf at " + pathToPdf);
 
+
         /*
         Your code here to...
         (1).  Load the pdf
@@ -19,7 +20,7 @@ public class OpticalMarkReaderMain {
          */
 
         
-        inputAnswerFile(fileContent,questionNum,findMostFilled(percentList));
+        //inputAnswerFile(fileContent,questionNum,findMostFilled(percentList));
         
     }
     private void inputAnswerFile(String fileContent, int questionNum, String mostFilled) throws IOException {
