@@ -3,6 +3,10 @@ package Filters;
 import Interfaces.PixelFilter;
 import core.DImage;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 
@@ -10,6 +14,7 @@ public class DisplayInfoFilter implements PixelFilter {
     public DisplayInfoFilter() {
         System.out.println("Filter running...");
     }
+    String fileContent = "";
 
     @Override
     public DImage processImage(DImage img) {
@@ -17,25 +22,40 @@ public class DisplayInfoFilter implements PixelFilter {
         int questionNum=1;
         short[][] orgGrid = img.getBWPixelGrid();
 
-        //short[][] grid = crop(orgGrid, 0, 0, 700, 700);
         short[][] grid=downSize(orgGrid);
 
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
 
-        int bubbleSize = (224-104)/5;
-        for (int r = 106; r < 106+bubbleSize*2*12; r+=bubbleSize*2) {
+        int bubbleSize = (111-51)/5;
+        for (int r = 54; r < 54+bubbleSize*2*18; r+=bubbleSize*2) {
             percentList=new ArrayList<>();
-            for (int c = 104; c < 104+bubbleSize*5; c+=bubbleSize) {
+            for (int c = 51; c < 51+bubbleSize*5; c+=bubbleSize) {
                 percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
                 displayBubbleBorder(grid, r, c, bubbleSize);
             }
-            System.out.println(questionNum+": "+findMostFilled(percentList));
+            inputAnswerFile(fileContent,questionNum,findMostFilled(percentList));
             questionNum++;
         }
 
         img.setPixels(grid);
         return img;
     }
+
+    private void inputAnswerFile(String fileContent, int questionNum, String mostFilled) throws IOException {
+        fileContent+=questionNum+": "+mostFilled;
+        writeDataToFile("Answers",fileContent);
+    }
+    public static void writeDataToFile(String filePath, String data) throws IOException {
+        try (FileWriter f = new FileWriter(filePath);
+             BufferedWriter b = new BufferedWriter(f);
+             PrintWriter writer = new PrintWriter(b);) {
+            writer.println(data);
+        } catch (IOException error) {
+            System.err.println("There was a problem writing to the file: " + filePath);
+            error.printStackTrace();
+        }
+    }
+
 
     public short[][] downSize(short[][] orgGrid) {
         short[][] rescale = new short[orgGrid.length/2][orgGrid[0].length/2];
@@ -107,14 +127,5 @@ public class DisplayInfoFilter implements PixelFilter {
         return (blackCount/pixelNum)*100;
     }
 
-    private short[][] crop(short[][] grid, int startR, int startC, int endR, int endC) {
-        short[][] newGrid = new short[endC-startC][endR-startR];
-        for (int r = startR; r < endR; r++) {
-            for (int c = startC; c < endC; c++) {
-                newGrid[r][c] = grid[r][c];
-            }
-        }
-        return newGrid;
-    }
 }
 
