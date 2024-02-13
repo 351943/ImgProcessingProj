@@ -1,15 +1,7 @@
 package Filters;
 
-
 import Interfaces.PixelFilter;
 import core.DImage;
-
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 
@@ -18,7 +10,6 @@ public class DisplayInfoFilter implements PixelFilter {
         System.out.println("Filter running...");
     }
 
-
     @Override
     public DImage processImage(DImage img) {
         short[][] grid=downSize(img.getBWPixelGrid());
@@ -26,37 +17,47 @@ public class DisplayInfoFilter implements PixelFilter {
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
         System.out.println(getAnswers(img));
 
-
         return img;
     }
 
-    /*private int findQuestionNum(){
+    private int findQuestionNum(short[][] grid){
         int bubbleSize = (111-51)/5;
+        ArrayList<Integer> answers = new ArrayList<>();
+        ArrayList<Double> percentList;
 
         for (int c = 220; c < 220+bubbleSize*3; c+=bubbleSize) {
+            percentList=new ArrayList<>();
             for (int r = 162; r < 162+bubbleSize*10; r+=bubbleSize) {
-
+                percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
+                displayBubbleBorder(grid, r, c, bubbleSize);
             }
-        }
-    }*/
+            answers.add(findMostFilled(percentList));
+        };
+        return changeToNum(answers);
+    }
+
+    private int changeToNum(ArrayList<Integer> answers) {
+        int tens = answers.get(1)*10;
+        return tens+answers.get(2);
+    }
 
     public ArrayList<String> getAnswers(DImage img){
         short[][] orgGrid = img.getBWPixelGrid();
         short[][] grid=downSize(orgGrid);
-        img.setPixels(grid);
-
         ArrayList<String> answers = new ArrayList<>();
         ArrayList<Double> percentList;
         int bubbleSize = (111-51)/5;
 
-        for (int r = 54; r < 54+bubbleSize*2*25; r+=bubbleSize*2) {
+        for (int r = 54; r < 54+bubbleSize*2*findQuestionNum(grid); r+=bubbleSize*2) {
             percentList=new ArrayList<>();
             for (int c = 51; c < 51+bubbleSize*5; c+=bubbleSize) {
                 percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
                 displayBubbleBorder(grid, r, c, bubbleSize);
             }
-            answers.add(findMostFilled(percentList));
+            answers.add(findLetter(findMostFilled(percentList)));
         }
+
+        img.setPixels(grid);
         return answers;
     }
 
@@ -71,14 +72,13 @@ public class DisplayInfoFilter implements PixelFilter {
         return rescale;
     }
 
-
     private static short avgVal(short[][] grid, int originalRow, int originalCol){
         double top2 = (grid[originalRow][originalCol]+grid[originalRow][originalCol+1]);
         double bottom2 = (grid[originalRow+1][originalCol]+grid[originalRow+1][originalCol+1]);
         return (short) ((top2+bottom2)/4);
     }
 
-    private String findMostFilled(ArrayList<Double> percentList) {
+    private int findMostFilled(ArrayList<Double> percentList) {
         double max = percentList.get(0);
         int maxIndex=0;
         for (int i = 1; i < percentList.size(); i++) {
@@ -87,7 +87,7 @@ public class DisplayInfoFilter implements PixelFilter {
                 maxIndex=i;
             }
         }
-        return findLetter(maxIndex);
+        return maxIndex;
     }
 
     private String findLetter(int maxIndex) {

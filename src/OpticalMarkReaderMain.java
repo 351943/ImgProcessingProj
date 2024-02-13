@@ -11,7 +11,6 @@ public class OpticalMarkReaderMain {
         ArrayList<String>answerList = new ArrayList<>();
         System.out.println("Loading pdf at " + pathToPdf);
 
-
         /*
         Your code here to...
         (1).  Load the pdf
@@ -20,8 +19,8 @@ public class OpticalMarkReaderMain {
         (4).  Output 2 csv files
          */
 
-        answerList = getAnswers(img);
-        inputAnswerFile(fileContent,answerList);
+        //answerList = getAnswers(img);
+        //inputAnswerFile(fileContent,answerList);
         
     }
     private void inputAnswerFile(String fileContent, ArrayList<String> list) throws IOException {
