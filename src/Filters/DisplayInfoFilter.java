@@ -21,8 +21,7 @@ public class DisplayInfoFilter implements PixelFilter {
 
     @Override
     public DImage processImage(DImage img) {
-        short[][] orgGrid = img.getBWPixelGrid();
-        short[][] grid=downSize(orgGrid);
+        short[][] grid=downSize(img.getBWPixelGrid());
 
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
         System.out.println(getAnswers(img));
@@ -31,12 +30,23 @@ public class DisplayInfoFilter implements PixelFilter {
         return img;
     }
 
+    /*private int findQuestionNum(){
+        int bubbleSize = (111-51)/5;
+
+        for (int c = 220; c < 220+bubbleSize*3; c+=bubbleSize) {
+            for (int r = 162; r < 162+bubbleSize*10; r+=bubbleSize) {
+
+            }
+        }
+    }*/
+
     public ArrayList<String> getAnswers(DImage img){
         short[][] orgGrid = img.getBWPixelGrid();
         short[][] grid=downSize(orgGrid);
         ArrayList<String> answers = new ArrayList<>();
         ArrayList<Double> percentList;
         int bubbleSize = (111-51)/5;
+
         for (int r = 54; r < 54+bubbleSize*2*25; r+=bubbleSize*2) {
             percentList=new ArrayList<>();
             for (int c = 51; c < 51+bubbleSize*5; c+=bubbleSize) {
@@ -48,10 +58,9 @@ public class DisplayInfoFilter implements PixelFilter {
         return answers;
     }
 
-    public short[][] downSize(short[][] orgGrid) {
+    private short[][] downSize(short[][] orgGrid) {
         short[][] rescale = new short[orgGrid.length/2][orgGrid[0].length/2];
-
-
+        
         for (int newRow = 0; newRow < rescale.length; newRow++) {
             for (int newCol = 0; newCol < rescale[newRow].length; newCol++) {
                 rescale[newRow][newCol]=avgVal(orgGrid, newRow*2, newCol*2);
@@ -67,7 +76,6 @@ public class DisplayInfoFilter implements PixelFilter {
         return (short) ((top2+bottom2)/4);
     }
 
-
     private String findMostFilled(ArrayList<Double> percentList) {
         double max = percentList.get(0);
         int maxIndex=0;
@@ -79,7 +87,6 @@ public class DisplayInfoFilter implements PixelFilter {
         }
         return findLetter(maxIndex);
     }
-
 
     private String findLetter(int maxIndex) {
         if(maxIndex==0){
@@ -97,9 +104,6 @@ public class DisplayInfoFilter implements PixelFilter {
         return "E";
     }
 
-
-
-
     private void displayBubbleBorder(short[][] grid, int r, int c, int bubbleSize) {
         for (int i = r; i < r+bubbleSize; i++) {
             for (int j = c; j < c+bubbleSize; j++) {
@@ -109,7 +113,6 @@ public class DisplayInfoFilter implements PixelFilter {
             }
         }
     }
-
 
     private double getPercentageFilled(short[][] grid, int row, int col, int bubbleSize) {
         double blackCount = 0;
@@ -124,8 +127,6 @@ public class DisplayInfoFilter implements PixelFilter {
         }
         return (blackCount/pixelNum)*100;
     }
-
-
 }
 
 
