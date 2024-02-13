@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class DisplayInfoFilter implements PixelFilter {
     public DisplayInfoFilter() {
         System.out.println("Filter running...");
-
     }
 
 
@@ -26,8 +25,7 @@ public class DisplayInfoFilter implements PixelFilter {
         short[][] grid=downSize(orgGrid);
 
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
-
-        getAnswers(grid);
+        System.out.println(getAnswers(img));
 
         img.setPixels(grid);
         return img;
