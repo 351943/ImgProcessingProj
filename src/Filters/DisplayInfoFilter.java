@@ -26,7 +26,7 @@ public class DisplayInfoFilter implements PixelFilter {
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
         System.out.println(getAnswers(img));
 
-        img.setPixels(grid);
+
         return img;
     }
 
@@ -43,6 +43,8 @@ public class DisplayInfoFilter implements PixelFilter {
     public ArrayList<String> getAnswers(DImage img){
         short[][] orgGrid = img.getBWPixelGrid();
         short[][] grid=downSize(orgGrid);
+        img.setPixels(grid);
+
         ArrayList<String> answers = new ArrayList<>();
         ArrayList<Double> percentList;
         int bubbleSize = (111-51)/5;

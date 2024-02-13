@@ -8,6 +8,7 @@ public class OpticalMarkReaderMain {
     public static void main(String[] args) {
         String pathToPdf = fileChooser();
         String fileContent = "";
+        ArrayList<String>answerList = new ArrayList<>();
         System.out.println("Loading pdf at " + pathToPdf);
 
 
@@ -19,12 +20,14 @@ public class OpticalMarkReaderMain {
         (4).  Output 2 csv files
          */
 
-        
-        //inputAnswerFile(fileContent,questionNum,findMostFilled(percentList));
+        answerList = getAnswers(img);
+        inputAnswerFile(fileContent,answerList);
         
     }
-    private void inputAnswerFile(String fileContent, int questionNum, String mostFilled) throws IOException {
-        fileContent+=questionNum+": "+mostFilled;
+    private void inputAnswerFile(String fileContent, ArrayList<String> list) throws IOException {
+        for (int index = 0; index < list.size(); index++) {
+            fileContent+=index+": "+ list.get(index);
+        }
         writeDataToFile("Answers",fileContent);
     }
     
