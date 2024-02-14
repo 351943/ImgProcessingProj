@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class OpticalMarkReaderMain {
+
     public static void main(String[] args) {
         String pathToPdf = fileChooser();
         String fileContent = "";
@@ -23,6 +24,7 @@ public class OpticalMarkReaderMain {
         //inputAnswerFile(fileContent,answerList);
         
     }
+
     private void inputAnswerFile(String fileContent, ArrayList<String> list) throws IOException {
         for (int index = 0; index < list.size(); index++) {
             fileContent+=index+": "+ list.get(index);

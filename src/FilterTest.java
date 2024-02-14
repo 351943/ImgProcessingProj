@@ -5,7 +5,14 @@ import core.DImage;
 import core.DisplayWindow;
 import processing.core.PImage;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 public class FilterTest {
+
     public static String currentFolder = System.getProperty("user.dir") + "/";
 
 
