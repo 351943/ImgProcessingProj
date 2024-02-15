@@ -6,11 +6,12 @@ import java.util.ArrayList;
 
 
 public class DisplayInfoFilter implements PixelFilter {
-    int page;
-    int questionAmount;
-    public DisplayInfoFilter() {
-        System.out.println("Filter running...");
-        questionAmount=0;
+    private int page;
+    private int questionNum;
+
+    public DisplayInfoFilter(int pageNum, int questionNum) {
+        page=pageNum;
+        this.questionNum=questionNum;
     }
 
     @Override
@@ -18,30 +19,27 @@ public class DisplayInfoFilter implements PixelFilter {
         short[][] grid=downSize(img.getBWPixelGrid());
 
         System.out.println("Image is " + grid.length + " by "+ grid[0].length);
-        System.out.println(getAnswers(img));
 
         return img;
-    }
-    public void setPage(int page){
-        this.page = page;
     }
 
     private int findQuestionNum(short[][] grid){
         if (page==1) {
             int bubbleSize = (111 - 51) / 5;
             ArrayList<Integer> answers = new ArrayList<>();
-            ArrayList<Double> percentList = new ArrayList<>();
+            ArrayList<Double> percentList;
 
             for (int c = 220; c < 220 + bubbleSize * 3; c += bubbleSize) {
+                percentList = new ArrayList<>();
                 for (int r = 162; r < 162 + bubbleSize * 10; r += bubbleSize) {
                     percentList.add(getPercentageFilled(grid, r, c, bubbleSize));
                     displayBubbleBorder(grid, r, c, bubbleSize);
                 }
                 answers.add(findMostFilled(percentList));
             }
-            questionAmount = changeToNum(answers);
+            questionNum=changeToNum(answers);
         }
-        return questionAmount;
+        return questionNum;
     }
 
     private int changeToNum(ArrayList<Integer> answers) {
@@ -56,10 +54,10 @@ public class DisplayInfoFilter implements PixelFilter {
         ArrayList<Double> percentList;
         int bubbleSize = (111-51)/5;
 
-        for (int r = 54; r < 54+bubbleSize*2*findQuestionNum(grid); r+=bubbleSize*2) {
-            percentList=new ArrayList<>();
-            for (int c = 51; c < 51+bubbleSize*5; c+=bubbleSize) {
-                percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
+        for (int r = 54; r < 54 + bubbleSize * 2 * findQuestionNum(grid); r += bubbleSize * 2) {
+            percentList = new ArrayList<>();
+            for (int c = 51; c < 51 + bubbleSize * 5; c += bubbleSize) {
+                percentList.add(getPercentageFilled(grid, r, c, bubbleSize));
                 displayBubbleBorder(grid, r, c, bubbleSize);
             }
             answers.add(findLetter(findMostFilled(percentList)));
