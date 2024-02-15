@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 
 public class DisplayInfoFilter implements PixelFilter {
+    int page;
+    int questionAmount;
     public DisplayInfoFilter() {
         System.out.println("Filter running...");
+        questionAmount=0;
     }
 
     @Override
@@ -19,21 +22,26 @@ public class DisplayInfoFilter implements PixelFilter {
 
         return img;
     }
+    public void setPage(int page){
+        this.page = page;
+    }
 
     private int findQuestionNum(short[][] grid){
-        int bubbleSize = (111-51)/5;
-        ArrayList<Integer> answers = new ArrayList<>();
-        ArrayList<Double> percentList;
+        if (page==1) {
+            int bubbleSize = (111 - 51) / 5;
+            ArrayList<Integer> answers = new ArrayList<>();
+            ArrayList<Double> percentList = new ArrayList<>();
 
-        for (int c = 220; c < 220+bubbleSize*3; c+=bubbleSize) {
-            percentList=new ArrayList<>();
-            for (int r = 162; r < 162+bubbleSize*10; r+=bubbleSize) {
-                percentList.add(getPercentageFilled(grid,r,c,bubbleSize));
-                displayBubbleBorder(grid, r, c, bubbleSize);
+            for (int c = 220; c < 220 + bubbleSize * 3; c += bubbleSize) {
+                for (int r = 162; r < 162 + bubbleSize * 10; r += bubbleSize) {
+                    percentList.add(getPercentageFilled(grid, r, c, bubbleSize));
+                    displayBubbleBorder(grid, r, c, bubbleSize);
+                }
+                answers.add(findMostFilled(percentList));
             }
-            answers.add(findMostFilled(percentList));
-        };
-        return changeToNum(answers);
+            questionAmount = changeToNum(answers);
+        }
+        return questionAmount;
     }
 
     private int changeToNum(ArrayList<Integer> answers) {

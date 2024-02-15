@@ -23,7 +23,7 @@ public class OpticalMarkReaderMain {
         //inputAnswerFile(fileContent,answerList);
         
     }
-    private void inputAnswerFile(String fileContent, ArrayList<String> list) throws IOException {
+    public void inputAnswerFile(String fileContent, ArrayList<String> list) throws IOException {
         for (int index = 0; index < list.size(); index++) {
             fileContent+=index+": "+ list.get(index);
         }
