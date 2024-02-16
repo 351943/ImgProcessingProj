@@ -17,14 +17,10 @@ public class FilterTest {
 
 
     public static void main(String[] args) throws IOException {
-        // ----------------------------------------------------------------
         // >>> Run this to save a pdf page and run filters on the image <<<
-        // ----------------------------------------------------------------
        // SaveAndDisplayExample(1);
 
-        // -------------------------------------------------------------------------------
         // >>> Run this to run your filter on a page /without/ displaying anything <<<
-        // -------------------------------------------------------------------------------
          RunTheFilter();
     }
 
@@ -32,22 +28,38 @@ public class FilterTest {
         PImage keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", 1);
         DisplayInfoFilter keyFilter = new DisplayInfoFilter(1,0);
         ArrayList<String> key = keyFilter.getAnswers(new DImage(keyIn));
-        int questionAmount = key.size();
-        String fileContent = "1. "+questionAmount;
-        for (int i = 0; i < questionAmount; i++) {
-            fileContent+=", "+key.get(i);
-        }
+        int numQuestions = key.size();
+        String fileContent = "";
+        fileContent=createHeader(fileContent, numQuestions);
+        fileContent+="\n";
+        fileContent=displayKey(fileContent,key,numQuestions);
         fileContent+="\n";
 
         for (int pageNum = 1; pageNum < 7; pageNum++) {
             keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
             DImage img = new DImage(keyIn);
 
-            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,questionAmount);
+            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQuestions);
             ArrayList<String> answers = filter.getAnswers(img);
             fileContent+="\n"+compareAnswer(pageNum, key,answers);
         }
         inputAnswerFile(fileContent);
+    }
+
+    private static String displayKey(String fileContent, ArrayList<String> key, int numQ) {
+        fileContent+= "(key) 1. "+numQ;
+        for (int i = 0; i < numQ; i++) {
+            fileContent+=", "+key.get(i);
+        }
+        return fileContent;
+    }
+
+    private static String createHeader(String fileContent, int numQ) {
+        fileContent+= "page, # right";
+        for (int currQ = 0; currQ < numQ; currQ++) {
+            fileContent+=", q"+(currQ+1);
+        }
+        return fileContent;
     }
 
     private static String compareAnswer(int pageNum, ArrayList<String> key, ArrayList<String> answers) {
