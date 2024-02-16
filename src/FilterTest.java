@@ -37,7 +37,7 @@ public class FilterTest {
         for (int i = 0; i < questionAmount; i++) {
             fileContent+=", "+key.get(i);
         }
-        inputAnswerFile(fileContent);
+        fileContent+="\n";
 
         for (int pageNum = 1; pageNum < 7; pageNum++) {
             keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
@@ -45,8 +45,9 @@ public class FilterTest {
 
             DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,questionAmount);
             ArrayList<String> answers = filter.getAnswers(img);
-            inputAnswerFile(compareAnswer(pageNum, key,answers));
+            fileContent+="\n"+compareAnswer(pageNum, key,answers);
         }
+        inputAnswerFile(fileContent);
     }
 
     private static String compareAnswer(int pageNum, ArrayList<String> key, ArrayList<String> answers) {
