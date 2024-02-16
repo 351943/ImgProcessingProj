@@ -29,7 +29,7 @@ public class OpticalMarkReaderMain {
         for (int index = 0; index < list.size(); index++) {
             fileContent+=index+": "+ list.get(index);
         }
-        writeDataToFile("Answers",fileContent);
+        writeDataToFile("Scores",fileContent);
     }
     
     

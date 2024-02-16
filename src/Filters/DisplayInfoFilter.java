@@ -4,7 +4,6 @@ import Interfaces.PixelFilter;
 import core.DImage;
 import java.util.ArrayList;
 
-
 public class DisplayInfoFilter implements PixelFilter {
     private int page;
     private int questionNum;

@@ -12,15 +12,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class FilterTest {
-
     public static String currentFolder = System.getProperty("user.dir") + "/";
 
-
     public static void main(String[] args) throws IOException {
-        // >>> Run this to save a pdf page and run filters on the image <<<
-       // SaveAndDisplayExample(1);
-
-        // >>> Run this to run your filter on a page /without/ displaying anything <<<
          RunTheFilter();
     }
 
@@ -29,40 +23,38 @@ public class FilterTest {
         DisplayInfoFilter keyFilter = new DisplayInfoFilter(1,0);
         ArrayList<String> key = keyFilter.getAnswers(new DImage(keyIn));
         int numQuestions = key.size();
-        String fileContent = "";
-        fileContent=createHeader(fileContent, numQuestions);
-        fileContent+="\n";
-        fileContent=displayKey(fileContent,key,numQuestions);
-        fileContent+="\n";
+        String fileContent = addKey(createHeader("", numQuestions),key,numQuestions);
 
-        for (int pageNum = 1; pageNum < 7; pageNum++) {
-            keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
-            DImage img = new DImage(keyIn);
-
-            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQuestions);
-            ArrayList<String> answers = filter.getAnswers(img);
-            fileContent+="\n"+compareAnswer(pageNum, key,answers);
-        }
-        inputAnswerFile(fileContent);
+        writeDataToFile("Scores",addFileContent(fileContent, numQuestions, keyIn, key));
     }
 
-    private static String displayKey(String fileContent, ArrayList<String> key, int numQ) {
+    private static String addFileContent(String fileContent, int numQuestions, PImage keyIn, ArrayList<String> key){
+        for (int pageNum = 1; pageNum < 7; pageNum++) {
+            keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
+            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQuestions);
+            ArrayList<String> answers = filter.getAnswers(new DImage(keyIn));
+            fileContent+="\n"+compareToKey(pageNum,key,answers);
+        }
+        return fileContent;
+    }
+
+    private static String addKey(String fileContent, ArrayList<String> key, int numQ) {
         fileContent+= "(key) 1. "+numQ;
         for (int i = 0; i < numQ; i++) {
             fileContent+=", "+key.get(i);
         }
-        return fileContent;
+        return fileContent+"\n";
     }
 
     private static String createHeader(String fileContent, int numQ) {
         fileContent+= "page, # right";
-        for (int currQ = 0; currQ < numQ; currQ++) {
-            fileContent+=", q"+(currQ+1);
+        for (int currQ = 1; currQ <= numQ; currQ++) {
+            fileContent+=", q"+(currQ);
         }
-        return fileContent;
+        return fileContent + "\n";
     }
 
-    private static String compareAnswer(int pageNum, ArrayList<String> key, ArrayList<String> answers) {
+    private static String compareToKey(int pageNum, ArrayList<String> key, ArrayList<String> answers) {
         String compare = "";
         int right = 0;
         for (int i = 0; i < key.size(); i++) {
@@ -76,15 +68,10 @@ public class FilterTest {
         return (pageNum+". "+right+compare);
     }
 
-    private static void inputAnswerFile(String fileContent) throws IOException {
-        writeDataToFile("Answers",fileContent);
-    }
-
-
     private static void writeDataToFile(String filePath, String data) throws IOException {
         try (FileWriter f = new FileWriter(filePath);
-             BufferedWriter b = new BufferedWriter(f);
-             PrintWriter writer = new PrintWriter(b);) {
+            BufferedWriter b = new BufferedWriter(f);
+            PrintWriter writer = new PrintWriter(b)) {
             writer.println(data);
         } catch (IOException error) {
             System.err.println("There was a problem writing to the file: " + filePath);
