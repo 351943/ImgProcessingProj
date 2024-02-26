@@ -16,6 +16,7 @@ public class FilterTest {
 
     public static void main(String[] args) throws IOException {
          RunTheFilter();
+         SaveAndDisplayExample(1);
     }
 
     private static void RunTheFilter() throws IOException {
@@ -25,10 +26,19 @@ public class FilterTest {
         int numQuestions = key.size();
         String fileContent = addKey(createHeader("", numQuestions),key,numQuestions);
 
-        writeDataToFile("Scores",addFileContent(fileContent, numQuestions, keyIn, key));
+        writeDataToFile("Scores",addScoresContent(fileContent, numQuestions, keyIn, key));
+        writeDataToFile("Item Analysis File",addAnalysisContent(numQuestions));
     }
 
-    private static String addFileContent(String fileContent, int numQuestions, PImage keyIn, ArrayList<String> key){
+    private static String addAnalysisContent(int numQ){
+        String content = "Test Question Number \t Amount of Times Wrong \t Amount of Times Answered";
+        for (int currQ = 1; currQ <= numQ; currQ++) {
+            content+=currQ+". \n";
+        }
+        return content;
+    }
+
+    private static String addScoresContent(String fileContent, int numQuestions, PImage keyIn, ArrayList<String> key){
         for (int pageNum = 1; pageNum < 7; pageNum++) {
             keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
             DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQuestions);
