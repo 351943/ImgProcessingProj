@@ -1,6 +1,5 @@
 import FileIO.PDFHelper;
 import Filters.DisplayInfoFilter;
-import Interfaces.PixelFilter;
 import core.DImage;
 import core.DisplayWindow;
 import processing.core.PImage;
@@ -15,7 +14,8 @@ public class FilterTest {
     public static String currentFolder = System.getProperty("user.dir") + "/";
 
     public static void main(String[] args) throws IOException {
-         RunTheFilter();
+        RunTheFilter();
+        SaveAndDisplayExample(1);
     }
 
     private static void RunTheFilter() throws IOException {
@@ -25,10 +25,19 @@ public class FilterTest {
         int numQuestions = key.size();
         String fileContent = addKey(createHeader("", numQuestions),key,numQuestions);
 
-        writeDataToFile("Scores",addFileContent(fileContent, numQuestions, keyIn, key));
+        writeDataToFile("Scores",addScoresContent(fileContent, numQuestions, keyIn, key));
+        writeDataToFile("Item Analysis File",addAnalysisContent(numQuestions));
     }
 
-    private static String addFileContent(String fileContent, int numQuestions, PImage keyIn, ArrayList<String> key){
+    private static String addAnalysisContent(int numQ){
+        String content = "Test Question Number \t Amount of Times Wrong \t Amount of Times Answered";
+        for (int currQ = 1; currQ <= numQ; currQ++) {
+            content+=currQ+". \n";
+        }
+        return content;
+    }
+
+    private static String addScoresContent(String fileContent, int numQuestions, PImage keyIn, ArrayList<String> key){
         for (int pageNum = 1; pageNum < 7; pageNum++) {
             keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
             DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQuestions);
@@ -70,8 +79,8 @@ public class FilterTest {
 
     private static void writeDataToFile(String filePath, String data) throws IOException {
         try (FileWriter f = new FileWriter(filePath);
-            BufferedWriter b = new BufferedWriter(f);
-            PrintWriter writer = new PrintWriter(b)) {
+             BufferedWriter b = new BufferedWriter(f);
+             PrintWriter writer = new PrintWriter(b)) {
             writer.println(data);
         } catch (IOException error) {
             System.err.println("There was a problem writing to the file: " + filePath);

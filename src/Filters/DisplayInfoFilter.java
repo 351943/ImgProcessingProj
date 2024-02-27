@@ -135,5 +135,3 @@ public class DisplayInfoFilter implements PixelFilter {
         return (blackCount/pixelNum)*100;
     }
 }
-
-
