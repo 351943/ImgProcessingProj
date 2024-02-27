@@ -1,5 +1,6 @@
 import FileIO.PDFHelper;
 import Filters.DisplayInfoFilter;
+import Interfaces.PixelFilter;
 import core.DImage;
 import core.DisplayWindow;
 import processing.core.PImage;
@@ -14,8 +15,8 @@ public class FilterTest {
     public static String currentFolder = System.getProperty("user.dir") + "/";
 
     public static void main(String[] args) throws IOException {
-        RunTheFilter();
-        SaveAndDisplayExample(1);
+         RunTheFilter();
+         SaveAndDisplayExample(1);
     }
 
     private static void RunTheFilter() throws IOException {
@@ -79,8 +80,8 @@ public class FilterTest {
 
     private static void writeDataToFile(String filePath, String data) throws IOException {
         try (FileWriter f = new FileWriter(filePath);
-             BufferedWriter b = new BufferedWriter(f);
-             PrintWriter writer = new PrintWriter(b)) {
+            BufferedWriter b = new BufferedWriter(f);
+            PrintWriter writer = new PrintWriter(b)) {
             writer.println(data);
         } catch (IOException error) {
             System.err.println("There was a problem writing to the file: " + filePath);
