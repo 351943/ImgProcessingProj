@@ -1,6 +1,5 @@
 import FileIO.PDFHelper;
 import Filters.DisplayInfoFilter;
-import Interfaces.PixelFilter;
 import core.DImage;
 import core.DisplayWindow;
 import processing.core.PImage;
@@ -16,7 +15,6 @@ public class FilterTest {
 
     public static void main(String[] args) throws IOException {
          RunTheFilter();
-         SaveAndDisplayExample(1);
     }
 
     private static void RunTheFilter() throws IOException {
@@ -27,21 +25,35 @@ public class FilterTest {
         String fileContent = addKey(createHeader("", numQuestions),key,numQuestions);
 
         writeDataToFile("Scores",addScoresContent(fileContent, numQuestions, keyIn, key));
-        writeDataToFile("Item Analysis File",addAnalysisContent(numQuestions));
+        writeDataToFile("Item Analysis File",addAnalysisContent(numQuestions, keyIn, key));
     }
 
-    private static String addAnalysisContent(int numQ){
-        String content = "Test Question Number \t Amount of Times Wrong \t Amount of Times Answered";
+    private static String addAnalysisContent(int numQ, PImage keyIn, ArrayList<String> key){
+        String content = "Question Number, Amt Wrong, Percentage Wrong";
         for (int currQ = 1; currQ <= numQ; currQ++) {
-            content+=currQ+". \n";
+            String add=currQ+", "+timesWrong(currQ,numQ,keyIn,key)+", "+(short)timesWrong(currQ,numQ,keyIn,key)/numQ+"%";
+            content+="\n"+add;
         }
         return content;
     }
 
-    private static String addScoresContent(String fileContent, int numQuestions, PImage keyIn, ArrayList<String> key){
+    private static int timesWrong(int currQ, int numQ, PImage keyIn, ArrayList<String> key) {
+        int wrong = 0;
         for (int pageNum = 1; pageNum < 7; pageNum++) {
             keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
-            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQuestions);
+            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQ);
+            ArrayList<String> answers = filter.getAnswers(new DImage(keyIn));
+            if(!answers.get(currQ-1).equals(key.get(currQ-1))) {
+                wrong++;
+            }
+        }
+        return wrong;
+    }
+
+    private static String addScoresContent(String fileContent, int numQ, PImage keyIn, ArrayList<String> key){
+        for (int pageNum = 1; pageNum < 7; pageNum++) {
+            keyIn = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf", pageNum);
+            DisplayInfoFilter filter = new DisplayInfoFilter(pageNum,numQ);
             ArrayList<String> answers = filter.getAnswers(new DImage(keyIn));
             fileContent+="\n"+compareToKey(pageNum,key,answers);
         }
@@ -57,7 +69,7 @@ public class FilterTest {
     }
 
     private static String createHeader(String fileContent, int numQ) {
-        fileContent+= "page, # right";
+        fileContent+= "page. # right";
         for (int currQ = 1; currQ <= numQ; currQ++) {
             fileContent+=", q"+(currQ);
         }
