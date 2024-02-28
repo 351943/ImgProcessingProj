@@ -31,7 +31,7 @@ public class FilterTest {
     private static String addAnalysisContent(int numQ, PImage keyIn, ArrayList<String> key){
         String content = "Question Number. Amt Wrong, Percentage Wrong";
         for (int currQ = 1; currQ <= numQ; currQ++) {
-            String add=currQ+". "+timesWrong(currQ,numQ,keyIn,key)+", "+(double)timesWrong(currQ,numQ,keyIn,key)/numQ+"%";
+            String add=currQ+". "+timesWrong(currQ,numQ,keyIn,key)+", "+timesWrong(currQ,numQ,keyIn,key)*100/5.0+"%";
             content+="\n"+add;
         }
         return content;
